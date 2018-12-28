@@ -1,5 +1,7 @@
 # demo
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/a810434655/banner.svg)](https://greenkeeper.io/)
+
 > A Vue.js project
 
 ## Build Setup
