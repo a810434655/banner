@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-  <banner :carouselList="list"/>
+  <banner :carouselList="list" :interval="startmove"/>
   </div>
 </template>
 
@@ -11,10 +11,12 @@ export default {
   name: 'App',
   data(){
     return {
+      pos:0,
+      startmove:2000,
       list:[
-        {id:"1",img:"../../static/img/james_harden.jpg"},
-        {id:"2",img:"../../static/img/james_harden-002.jpg"},
-        {id:"3",img:"../../static/img/james_harden-010.jpg"},
+        {img:"../../static/img/item1.jpg"},
+        {img:"../../static/img/item2.jpg"},
+        {img:"../../static/img/item3.jpg"},
       ],
 
     }
@@ -26,4 +28,8 @@ export default {
 </script>
 
 <style>
+  #app{
+    width: 100%;
+    height: 100%;
+  }
 </style>
