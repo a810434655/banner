@@ -1,8 +1,8 @@
 <template>
  <div id="banenr">
-   <img :src="imgSrc" :class="width==1 && height==1?'percentage':''" alt="">
-   <ul class="ul">
-     <li v-for="(item,key) in carouselList" @click="iconOver(key)" :key="key" :style="{'background':pop==key?active+' !important':''}"></li>
+   <img :src="imgSrc" :class="imgWidth==1 && imgHeight==1?'percentage':''" alt="">
+   <ul class="ul" :style="ulAttrBute">
+     <li v-for="(item,key) in carouselList" @mouseover="iconHover(key)" @mouseout="iconOut" @click="iconClick(key)" :style="{'background':date==key?act:col,'width':iconWidth+'px','height':iconWidth+'px','margin-left':between+'px'}" :key="key"></li>
    </ul>
  </div>
 
@@ -13,69 +13,123 @@ export default {
   name: 'banner',
   data () {
     return {
-
+      //接受setintval的ID来结束他
+       setIn:"",
+      //所有轮播根据date来
+       date:this.pop,
+      //选中小圆点的颜色
+       act:"",
+      //默认小圆点的颜色
+       col:"",
+      //ul的宽
+       ulWidth:"",
+      //外侧div的宽度
+       bannerWidth:"",
     }
   },
   computed:{
     imgSrc(){
-      return this.carouselList[this.pop].img;
+      //、先执行computed如果this.date还没有值,那么默认为0
+      if(this.date==false){
+        return this.carouselList[this.date].img;
+      }else{
+        return this.carouselList[this.date].img;
+      }
     },
+    ulAttrBute(){
+     return {'width':(this.iconWidth+this.between)*this.carouselList.length+'px','margin-left':(this.bannerWidth-((this.iconWidth+this.between)*this.carouselList.length))/2+'px'}
+    }
   },
   mounted(){
+    this.act=this.active;
+    this.col=this.background;
     this.$nextTick(()=>{
-      let banenrWidth=document.getElementById("banenr").offsetWidth;
-      let ul=document.querySelector(".ul");
-      let li=document.querySelectorAll(".ul>li");
-      // 改变ul的宽高,让他可以适应居中
-      for(var i=0;i<this.carouselList.length;i++){
-        li[i].style.width=this.iconWidth+'px';
-        li[i].style.height=this.iconWidth+'px';
-        li[i].style.marginLeft=this.between+'px';
-        li[i].style.background=this.color;
-      }
-      ul.style.width=(this.iconWidth+this.between)*this.carouselList.length+'px';
-      ul.style.marginLeft=(banenrWidth-((this.iconWidth+this.between)*this.carouselList.length))/2+'px';
+      //获取包裹元素的DIV宽度
+      this.bannerWidth=document.getElementById("banenr").offsetWidth;
+      this.setInter();
     })
+    
   },
   methods:{
-    iconOver(){
-
+    //按钮点击事件，点击后跳转相应图片
+    iconClick(index){
+      if(this.toggle=='click'){
+        clearInterval(this.setIn);
+        this.date=index;
+      }else{
+       return false;
+      }
+    },
+    iconOut(){
+      this.setInter();
+    },
+    iconHover(index){
+      if(this.toggle=='hover'){
+        clearInterval(this.setIn);
+        this.date=index;
+      }else{
+        return false;
+      }
+    },
+    // 是否自动轮播
+    setInter(){
+      this.setIn=setInterval(()=>{
+        if(this.date==this.carouselList.length-1){
+          this.date=0;
+        }else{
+          this.date++;
+        }
+      },this.interval);
     }
   },
   //轮播组件接收组件的宽度、高度、定时器间隔时间、轮播图List
   props:{
-    width:{
+    // 切换方式
+    toggle:{
+      type:String,
+      default:"hover"
+    },
+    //宽 默认为1的话是100%
+    imgWidth:{
       type:Number,
       default:1
     },
-    height:{
+    // 高 默认为1就会是100%
+    imgHeight:{
       type:Number,
       default:1
     },
+    //定时器时间
     interval:{
       type:Number,
       default:2000
     },
+    //默认开始图片
     pop:{
       type:Number,
-      default:2
+      default:0
     },
+    //小圆点宽高
     iconWidth:{
       type:Number,
       default:15
     },
+    //默认选中小圆点颜色
     active:{
       type:String,
       default:"#ffffff"
     },
-    color:{
+    //默认小圆点颜色
+    background:{
       type:String,
       default:"#03a9f4"
     },
+    //小圆点间距
     between:{
       type:Number,
       default:5
     },
+    //图片数据
     carouselList:{
       type:Array,
       default:function () {
@@ -114,8 +168,7 @@ export default {
   .ul>li{
     float: left;
     border-radius: 30px;
+    cursor: pointer;
   }
-  .active{
-    background: red !important;
-  }
+
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-  <banner :carouselList="list" :interval="startmove"/>
+  <banner :carouselList="list" :pop="pos"  :interval="startmove"/>
   </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   name: 'App',
   data(){
     return {
-      pos:0,
+      pos:2,
       startmove:2000,
       list:[
         {img:"../../static/img/item1.jpg"},
@@ -27,9 +27,9 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   #app{
-    width: 100%;
-    height: 100%;
+    width: 50%;
+    height: 50%;
   }
 </style>
